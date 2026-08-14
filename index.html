@@ -175,6 +175,17 @@ footer{padding:8px 0 24px;font-size:11.5px;color:rgba(13,30,51,.45);text-align:c
 }
 .editItem input{width:16px;height:16px;flex:0 0 auto;accent-color:var(--enji);}
 .editWalk{margin-left:auto;font-size:11.5px;color:rgba(13,30,51,.45);white-space:nowrap;}
+.editBar .sheetBtn{
+  font:inherit;font-size:12.5px;font-weight:700;text-decoration:none;
+  padding:7px 12px;border-radius:999px;
+  border:1px solid var(--enji);background:var(--enji);color:var(--washi);
+}
+#srcNote{font-size:12px;color:rgba(13,30,51,.6);}
+#srcNote.warn{color:var(--enji);font-weight:700;}
+.editHint{
+  font-size:12px;line-height:1.7;color:rgba(13,30,51,.62);
+  margin:-6px 0 16px;padding-left:12px;border-left:2px solid var(--line);
+}
 </style>
 </head>
 <body>
@@ -230,7 +241,19 @@ footer{padding:8px 0 24px;font-size:11.5px;color:rgba(13,30,51,.45);text-align:c
 </div>
 
 <script>
-const SCRIPT_SRC = document.currentScript.textContent;
+/* ═══════════════════════════════════════════════════════════
+   店のデータは、下のスプレッドシートに入っています。
+   店を足す・消す・文章を直す・写真を変える ── ぜんぶシート側。
+   このページは開くたびにシートを読み直します。
+   （シートは「リンクを知っている全員が閲覧者」にしておくこと）
+   ═══════════════════════════════════════════════════════════ */
+const SHEET_ID  = "16VI1PYvK_6nxi97ix8N5OCEJbzi9aJO8uhvunDtWjDA";
+const SHEET_GID = "0";
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit#gid=${SHEET_GID}`;
+/* 「ファイル → 共有 → ウェブに公開」で CSV を公開した場合は、その URL をここに。
+   空のままでも動きます（その場合は読み取り用の別経路を使います）。 */
+const PUBLISHED_CSV = "";
+
 const EDIT = new URLSearchParams(location.search).has('edit');
 let excluded = new Set(JSON.parse(localStorage.getItem('nakaimap_hidden') || '[]'));
 
@@ -288,7 +311,12 @@ const TAGS = {
   smoke:{ja:"店内喫煙あり",en:"Smoking allowed",ko:"실내 흡연",zh:"店内可吸烟",cls:"warn"}
 };
 
-const SHOPS = [
+/* ── 予備データ ──────────────────────────────────────────────
+   シートが読めなかったときだけ、この中身が表示されます。
+   （宿のWi-Fiが不調でも、お客さんの画面は白くならない）
+   ふだんの編集はシート側で。ここは年に一度、書き出して貼り替える程度で十分です。
+   ────────────────────────────────────────────────────────── */
+const FALLBACK_SHOPS = [
   {id:"suzu",cat:"ramen",name:"麺屋 澄々",romaji:"Menya Suzu",pid:"ChIJwxzyj7mRQTURF4Z0vHLmt50",walk:4,rating:4.4,reviews:285,yen:2,alcohol:true,nomeat:true,tags:["nopork","late"],
    d:{ja:"鶏ベースの澄んだ塩・醤油。豚骨が重いと感じる夜に。ワインや日本酒も置いています。",en:"Clear chicken-based shio and shoyu ramen. A lighter night than tonkotsu, with wine and sake on the list.",ko:"닭 육수의 맑은 시오·쇼유 라멘. 돈코츠가 무겁게 느껴지는 밤에. 와인과 사케도 있습니다.",zh:"以鸡汤为底的清爽盐味与酱油拉面。觉得豚骨太腻时的选择，还供应葡萄酒与清酒。"}},
   {id:"unari",cat:"ramen",name:"ラーメン海鳴 中洲店",romaji:"Ramen Unari",pid:"ChIJ7ddRwpSRQTURI-_CYuCnrHM",walk:5,rating:4.2,reviews:1621,yen:1,alcohol:false,nomeat:false,tags:["late","cheap"],
@@ -394,6 +422,8 @@ const SHOPS = [
   {id:"udon_taira",cat:"udon",name:"うどん平",romaji:"Udon Taira",pid:"ChIJrzUd7r6RQTURJdG7o6TxEMs",walk:22,rating:4.4,reviews:2720,yen:1,alcohol:false,nomeat:true,tags:["lunch","cheap","subway"],
    d:{ja:"移転してやや遠くなりましたが、ごぼう天うどんが評判の名店。営業は昼のみ（11:00〜16:00頃）です。地下鉄も便利。",en:"Moved a bit further away, but famous for burdock tempura udon. Lunch only (around 11am–4pm); the subway makes it easy.",ko:"이전으로 다소 멀어졌지만 우엉튀김 우동으로 유명한 가게. 점심에만 영업(약 11시~16시). 지하철이 편리합니다.",zh:"虽然搬迁后稍远，但牛蒡天妇罗乌冬很有名。仅午市营业（约11点至16点），坐地铁较方便。"}}
 ];
+
+let SHOPS = FALLBACK_SHOPS.slice();
 
 /* ─────────────────────────────────────────────
    カテゴリごとのイラスト（SVG／手描き）
@@ -529,7 +559,8 @@ ILLUS.curry = ILLUS.teishoku;
 
 let lang = "ja", cat = "all", tog = {alcohol:false, nomeat:false};
 
-const mapUrl = s => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.name)}&query_place_id=${s.pid}`;
+const mapUrl = s => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.name)}${s.pid?`&query_place_id=${encodeURIComponent(s.pid)}`:""}`;
+const esc = v => String(v==null?"":v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 function renderChips(){
   const t = UI[lang];
@@ -552,28 +583,30 @@ function renderList(){
   document.getElementById("vegNote").innerHTML = (cat==="veg")
     ? `<div class="note"><b>${t.vegTitle}</b>${t.vegBody}</div>` : "";
 
-  document.getElementById("list").innerHTML = shops.length ? shops.map(s=>`
+  document.getElementById("list").innerHTML = shops.length ? shops.map(s=>{
+    const tags = (s.tags||[]).filter(k=>TAGS[k]);
+    return `
     <article class="card${s.cat==="veg"?" veg":""}">
       <div class="card-body">
         <div class="card-top">
           ${s.photo
-            ? `<img class="photo" src="${s.photo}" alt="${s.name}" loading="lazy">`
-            : `<div class="illus" style="background-color:${TINT[s.cat]}">${ILLUS[s.cat]}</div>`}
+            ? `<img class="photo" src="${esc(s.photo)}" alt="${esc(s.name)}" loading="lazy">`
+            : `<div class="illus" style="background-color:${TINT[s.cat]||"#EEE8DA"}">${ILLUS[s.cat]||ILLUS.teishoku}</div>`}
           <div class="card-head">
-            <h2>${s.name}</h2>
-            <p class="romaji">${s.romaji}</p>
+            <h2>${esc(s.name)}</h2>
+            <p class="romaji">${esc(s.romaji)}</p>
           </div>
         </div>
-        <p class="desc">${s.d[lang]}</p>
+        <p class="desc">${esc(s.d[lang] || s.d.ja || "")}</p>
         <div class="meta">
           <span class="walk">${t.walk(s.walk)}</span>
-          <span class="star">★ ${s.rating.toFixed(1)} <small>(${s.reviews} ${t.reviews})</small></span>
-          <span class="yen">${"¥".repeat(s.yen)}</span>
+          ${s.rating ? `<span class="star">★ ${Number(s.rating).toFixed(1)} <small>(${s.reviews} ${t.reviews})</small></span>` : ""}
+          ${s.yen ? `<span class="yen">${"¥".repeat(s.yen)}</span>` : ""}
         </div>
-        ${s.tags.length?`<div class="tags">${s.tags.map(k=>`<span class="tag ${TAGS[k].cls||""}">${TAGS[k][lang]}</span>`).join("")}</div>`:""}
+        ${tags.length?`<div class="tags">${tags.map(k=>`<span class="tag ${TAGS[k].cls||""}">${TAGS[k][lang]}</span>`).join("")}</div>`:""}
         <a class="map" href="${mapUrl(s)}" target="_blank" rel="noopener">${t.map} →</a>
       </div>
-    </article>`).join("") : `<p class="empty">${t.empty}</p>`;
+    </article>`;}).join("") : `<p class="empty">${t.empty}</p>`;
 }
 
 function renderAll(){
@@ -598,12 +631,14 @@ function renderEditPanel(){
   panel.innerHTML = `
     <div class="editBar">
       <b>編集モード</b>
-      <span>チェックを外すと一覧から非表示になります</span>
+      <span id="srcNote" class="${SOURCE.mode==="fallback"?"warn":""}">${sourceNote()}</span>
+      <button type="button" id="reloadBtn">シートを読み直す ⟳</button>
+      <a class="sheetBtn" href="${SHEET_URL}" target="_blank" rel="noopener">スプレッドシートを開く ↗</a>
       <button type="button" id="allOnBtn">全部表示</button>
       <button type="button" id="allOffBtn">全部非表示</button>
-      <button type="button" id="exportBtn" class="expBtn">この内容でHTMLを書き出す ⬇</button>
       <span id="editCount"></span>
     </div>
+    <p class="editHint">店を足す・消す・文章や写真を直すのは、すべてスプレッドシート側です。載せるのをやめる店は「掲載」列を FALSE に。<br>下のチェックは、この端末のブラウザだけの一時的な絞り込み（シートには反映されません）。</p>
     <div class="editList">
       ${Object.entries(grouped).map(([c,list])=>`
         <div class="editGroup">
@@ -637,26 +672,170 @@ function renderEditPanel(){
     localStorage.setItem("nakaimap_hidden", JSON.stringify([...excluded]));
     renderList(); renderEditPanel();
   });
-  document.getElementById("exportBtn").addEventListener("click", exportHTML);
+  document.getElementById("reloadBtn").addEventListener("click", ()=>loadSheet());
 }
 
-function exportHTML(){
-  const newScriptText = SCRIPT_SRC.split("\n").filter(line=>{
-    const m = line.match(/^\s*\{id:"([^"]+)",/);
-    return !(m && excluded.has(m[1]));
-  }).join("\n");
+/* ═══════════════════════════════════════════════════════════
+   スプレッドシートの読み込み
+   ─ 1. まず内蔵データで表示（画面がすぐ出る）
+     2. 裏でシートを読み、届いたら差し替える
+     3. 読めなければ内蔵データのまま（お客さんにはエラーを出さない）
+   ═══════════════════════════════════════════════════════════ */
+const SOURCE = {mode:"loading", count:0, at:"", error:""};
 
-  const clone = document.documentElement.cloneNode(true);
-  const ep = clone.querySelector("#editPanel"); if(ep) ep.innerHTML = "";
-  const scriptEl = clone.querySelector("script");
-  scriptEl.textContent = newScriptText;
+function sourceNote(){
+  if(SOURCE.mode==="loading")  return "シートを読み込み中…";
+  if(SOURCE.mode==="sheet")    return `シートを読み込みました（${SOURCE.count}件／${SOURCE.at}）`;
+  return `シートを読めませんでした（${SOURCE.error||"原因不明"}）。内蔵データを表示中`;
+}
 
-  const html = "<!DOCTYPE html>\n" + clone.outerHTML;
-  const blob = new Blob([html], {type:"text/html"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "Nakaimap.html";
-  document.body.appendChild(a); a.click(); a.remove();
+/* 見出しの表記ゆれを吸収する */
+const COLS = {
+  "掲載":"show","公開":"show","show":"show",
+  "ID":"id","店ID":"id","id":"id",
+  "カテゴリ":"cat","cat":"cat",
+  "店名":"name","name":"name",
+  "ローマ字":"romaji","romaji":"romaji",
+  "GoogleプレイスID":"pid","プレイスID":"pid","place_id":"pid","pid":"pid",
+  "徒歩分":"walk","徒歩":"walk","所要時間":"walk","walk":"walk",
+  "評価":"rating","rating":"rating",
+  "口コミ数":"reviews","口コミ":"reviews","reviews":"reviews",
+  "価格帯":"yen","yen":"yen","price":"yen",
+  "お酒":"alcohol","alcohol":"alcohol",
+  "牛豚なしOK":"nomeat","牛豚なし":"nomeat","nomeat":"nomeat",
+  "タグ":"tags","tags":"tags",
+  "写真URL":"photo","写真":"photo","photo":"photo",
+  "紹介文_日本語":"ja","日本語":"ja","ja":"ja",
+  "紹介文_英語":"en","英語":"en","en":"en",
+  "紹介文_韓国語":"ko","韓国語":"ko","ko":"ko",
+  "紹介文_中国語":"zh","中国語":"zh","zh":"zh"
+};
+const colKey = h => {
+  const raw = String(h==null?"":h).replace(/\s+/g,"");
+  return COLS[raw] || COLS[raw.toLowerCase()] || null;
+};
+const toNum = v => { const n = parseFloat(String(v==null?"":v).replace(/[^\d.\-]/g,"")); return isFinite(n) ? n : null; };
+const toBool = (v, dflt) => {
+  if(typeof v === "boolean") return v;
+  const s = String(v==null?"":v).trim().toLowerCase();
+  if(s==="") return !!dflt;
+  return ["true","yes","y","1","はい","○","◯","可","あり","表示","公開"].includes(s);
+};
+/* Googleドライブの共有リンクを、そのまま画像として出せる形に直す */
+const photoUrl = u => {
+  const s = String(u==null?"":u).trim();
+  if(!s) return "";
+  const m = s.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?[^]*?id=|thumbnail\?[^]*?id=)([\w-]{20,})/);
+  return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w600` : s;
+};
+
+function rowsToShops(header, rows){
+  const keys = header.map(colKey);
+  const out = [];
+  rows.forEach((r,i)=>{
+    const o = {};
+    keys.forEach((k,j)=>{ if(k) o[k] = r[j]; });
+    if(!String(o.name||"").trim()) return;          // 店名が空の行は飛ばす
+    if(!toBool(o.show, true)) return;               // 「掲載」が FALSE の行は出さない
+    const ja = String(o.ja==null?"":o.ja).trim();
+    out.push({
+      id:      String(o.id||"").trim() || ("row"+(i+2)),
+      cat:     String(o.cat||"").trim() || "teishoku",
+      name:    String(o.name).trim(),
+      romaji:  String(o.romaji==null?"":o.romaji).trim(),
+      pid:     String(o.pid==null?"":o.pid).trim(),
+      walk:    toNum(o.walk) ?? 0,
+      rating:  toNum(o.rating),
+      reviews: toNum(o.reviews) ?? 0,
+      yen:     Math.max(0, Math.min(4, Math.round(toNum(o.yen) ?? 0))),
+      alcohol: toBool(o.alcohol, false),
+      nomeat:  toBool(o.nomeat, false),
+      tags:    String(o.tags==null?"":o.tags).split(/[,、\s]+/).map(x=>x.trim()).filter(Boolean),
+      photo:   photoUrl(o.photo),
+      d: { ja, en:String(o.en==null?"":o.en).trim()||ja,
+               ko:String(o.ko==null?"":o.ko).trim()||ja,
+               zh:String(o.zh==null?"":o.zh).trim()||ja }
+    });
+  });
+  return out;
+}
+
+/* 経路1：gviz（シートを「リンクを知っている全員が閲覧者」にするだけで読める） */
+function loadViaScript(){
+  return new Promise((resolve, reject)=>{
+    const cb = "nakaimapCb" + Math.random().toString(36).slice(2);
+    const el = document.createElement("script");
+    let settled = false;
+    const cleanup = ()=>{ try{ delete window[cb]; }catch(e){ window[cb]=undefined; } el.remove(); };
+    const timer = setTimeout(()=>{ if(!settled){ settled=true; cleanup(); reject(new Error("応答なし")); } }, 6000);
+    window[cb] = res => {
+      if(settled) return;
+      settled = true; clearTimeout(timer); cleanup();
+      try{
+        const table = res && res.table;
+        if(!table) throw new Error("データなし");
+        const labels = (table.cols||[]).map(c=>c.label||"");
+        let rows = (table.rows||[]).map(r=>(r.c||[]).map(c=> c ? (c.v!=null ? c.v : (c.f||"")) : ""));
+        const header = labels.some(l=>l) ? labels : (rows.shift() || []);
+        resolve(rowsToShops(header, rows));
+      }catch(e){ reject(e); }
+    };
+    el.onerror = ()=>{ if(!settled){ settled=true; clearTimeout(timer); cleanup(); reject(new Error("共有設定を確認")); } };
+    el.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?gid=${SHEET_GID}&headers=1`
+           + `&tqx=out:json;responseHandler:${cb}&_=${Date.now()}`;
+    document.head.appendChild(el);
+  });
+}
+
+/* 経路2：CSV（「ウェブに公開」した場合はこちらが安定） */
+function parseCSV(text){
+  const rows=[]; let row=[], cell="", q=false;
+  text = String(text).replace(/^\uFEFF/, "");
+  for(let i=0;i<text.length;i++){
+    const ch = text[i];
+    if(q){
+      if(ch === '"'){ if(text[i+1] === '"'){ cell+='"'; i++; } else q=false; }
+      else cell += ch;
+    }
+    else if(ch === '"') q = true;
+    else if(ch === ","){ row.push(cell); cell=""; }
+    else if(ch === "\n"){ row.push(cell); rows.push(row); row=[]; cell=""; }
+    else if(ch !== "\r") cell += ch;
+  }
+  if(cell !== "" || row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(r => r.some(c => String(c).trim() !== ""));
+}
+
+async function loadViaCsv(){
+  const url = PUBLISHED_CSV
+    || `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${SHEET_GID}`;
+  const res = await fetch(url + (url.includes("?") ? "&" : "?") + "_=" + Date.now(), {cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const rows = parseCSV(await res.text());
+  if(!rows.length) throw new Error("空のCSV");
+  return rowsToShops(rows.shift(), rows);
+}
+
+async function loadSheet(){
+  SOURCE.mode = "loading"; renderEditPanel();
+  let lastErr = "";
+  for(const load of [loadViaScript, loadViaCsv]){
+    try{
+      const shops = await load();
+      if(shops.length){
+        SHOPS = shops;
+        SOURCE.mode  = "sheet";
+        SOURCE.count = shops.length;
+        SOURCE.at    = new Date().toLocaleTimeString("ja-JP", {hour:"2-digit", minute:"2-digit"});
+        renderAll();
+        return;
+      }
+      lastErr = "掲載できる行がありません";
+    }catch(e){ lastErr = (e && e.message) || String(e); }
+  }
+  SOURCE.mode = "fallback"; SOURCE.error = lastErr;
+  renderEditPanel();
+  console.warn("[NAKAIMAP] シートを読めなかったため内蔵データを表示しています:", lastErr);
 }
 
 document.querySelectorAll(".lang").forEach(b=>b.addEventListener("click",()=>{
@@ -675,7 +854,8 @@ document.getElementById("toggles").addEventListener("click",e=>{
   tog[b.dataset.tog] = !tog[b.dataset.tog]; renderChips(); renderList();
 });
 
-renderAll();
+renderAll();   /* まず内蔵データで即表示 */
+loadSheet();   /* そのあとシートの内容に差し替え */
 </script>
 </body>
 </html>
