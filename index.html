@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>中今 まわりのごはん | Nakaima Neighborhood Eats</title>
+<title>NAKAIMAP | Guesthouse Nakaima</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
@@ -43,9 +43,10 @@ header{background:var(--washi);}
 }
 h1{
   font-family:"Shippori Mincho B1",serif;font-weight:700;
-  font-size:30px;line-height:1.25;margin:0 0 8px;letter-spacing:.02em;
+  font-size:32px;line-height:1.2;margin:0 0 8px;letter-spacing:.06em;
+  text-transform:uppercase;
 }
-h1 .sub{display:block;font-size:13px;letter-spacing:.12em;color:var(--ai);opacity:.75;font-weight:500;margin-top:6px;}
+h1 .sub{display:block;font-size:13px;letter-spacing:.12em;color:var(--ai);opacity:.75;font-weight:500;margin-top:6px;text-transform:none;}
 .lede{margin:0;font-size:13.5px;color:rgba(13,30,51,.72);}
 
 /* 言語 */
@@ -81,27 +82,30 @@ main{padding-top:20px;}
 .count{font-size:12px;letter-spacing:.08em;color:rgba(13,30,51,.5);margin:0 0 12px;}
 .card{
   background:var(--washi);border:1px solid var(--line);border-radius:3px;
-  padding:0 0 14px;margin-bottom:12px;box-shadow:var(--shadow);
+  padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow);
   position:relative;overflow:hidden;
 }
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ai);z-index:2;}
 .card.veg::before{background:var(--take);}
-.card-body{padding:14px 16px 0;}
+.card-body{padding:0;}
+.card-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
 .photo{
-  display:block;width:100%;aspect-ratio:16/9;max-height:230px;object-fit:cover;object-position:center;
-  background:var(--ai);border-bottom:1px solid var(--line);
+  flex:0 0 auto;width:76px;height:76px;border-radius:6px;object-fit:cover;object-position:center;
+  border:1px solid var(--line);background:var(--ai);
 }
 .illus{
-  width:100%;aspect-ratio:16/9;max-height:200px;border-bottom:1px solid var(--line);
+  flex:0 0 auto;width:76px;height:76px;border-radius:6px;
   display:flex;align-items:center;justify-content:center;overflow:hidden;
+  border:1px solid var(--line);
   background-image:repeating-linear-gradient(90deg,rgba(22,50,79,.05) 0 1px,transparent 1px 14px);
 }
 .illus svg{width:100%;height:100%;display:block;}
+.card-head{flex:1 1 auto;min-width:0;padding-top:2px;}
 .card h2{
-  font-family:"Shippori Mincho B1",serif;font-size:20px;font-weight:700;
-  margin:0 0 2px;line-height:1.35;letter-spacing:.01em;
+  font-family:"Shippori Mincho B1",serif;font-size:18px;font-weight:700;
+  margin:0 0 2px;line-height:1.3;letter-spacing:.01em;
 }
-.romaji{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(13,30,51,.45);margin:0 0 8px;}
+.romaji{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(13,30,51,.45);margin:0;}
 .desc{margin:0 0 10px;font-size:14px;color:rgba(13,30,51,.85);}
 .meta{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;margin-bottom:10px;font-size:12.5px;}
 .walk{font-weight:700;color:var(--enji);font-size:13px;letter-spacing:.01em;}
@@ -145,6 +149,32 @@ footer{padding:8px 0 24px;font-size:11.5px;color:rgba(13,30,51,.45);text-align:c
   @keyframes rise{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 }
 :focus-visible{outline:2px solid var(--enji);outline-offset:2px;}
+
+/* ── 編集モード（?edit=1）── */
+.editBar{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+  background:var(--washi);border:1px solid var(--enji);border-radius:4px;
+  padding:12px 14px;margin:16px 0;font-size:13px;
+}
+.editBar b{font-family:"Shippori Mincho B1",serif;color:var(--enji);}
+.editBar button{
+  font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;
+  padding:7px 12px;border-radius:999px;border:1px solid var(--ai);
+  background:transparent;color:var(--ai);
+}
+.editBar .expBtn{background:var(--enji);border-color:var(--enji);color:var(--washi);}
+#editCount{margin-left:auto;font-size:12px;color:rgba(13,30,51,.6);}
+.editGroup{margin-bottom:14px;}
+.editGroupTitle{
+  font-family:"Shippori Mincho B1",serif;font-size:13px;font-weight:700;
+  color:var(--ai);margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line);
+}
+.editItem{
+  display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:13.5px;
+  border-bottom:1px dotted var(--line);cursor:pointer;
+}
+.editItem input{width:16px;height:16px;flex:0 0 auto;accent-color:var(--enji);}
+.editWalk{margin-left:auto;font-size:11.5px;color:rgba(13,30,51,.45);white-space:nowrap;}
 </style>
 </head>
 <body>
@@ -167,7 +197,7 @@ footer{padding:8px 0 24px;font-size:11.5px;color:rgba(13,30,51,.45);text-align:c
 <header>
   <div class="wrap head-inner">
     <p class="eyebrow" id="eyebrow">Guesthouse Nakaima</p>
-    <h1 id="title">中今 まわりのごはん<span class="sub" id="subtitle">冷泉町から歩いて10分の店</span></h1>
+    <h1 id="title">NAKAIMAP<span class="sub" id="subtitle">冷泉町から歩いて10分の店</span></h1>
     <p class="lede" id="lede"></p>
     <div class="langs" role="group" aria-label="Language">
       <button class="lang" data-lang="ja" aria-pressed="true">日本語</button>
@@ -182,6 +212,8 @@ footer{padding:8px 0 24px;font-size:11.5px;color:rgba(13,30,51,.45);text-align:c
   <div class="chips" id="chips" role="group" aria-label="Category"></div>
   <div class="toggles" id="toggles" role="group" aria-label="Filters"></div>
 </div>
+
+<div id="editPanel" class="wrap"></div>
 
 <main class="wrap">
   <p class="count" id="count"></p>
@@ -198,37 +230,41 @@ footer{padding:8px 0 24px;font-size:11.5px;color:rgba(13,30,51,.45);text-align:c
 </div>
 
 <script>
+const SCRIPT_SRC = document.currentScript.textContent;
+const EDIT = new URLSearchParams(location.search).has('edit');
+let excluded = new Set(JSON.parse(localStorage.getItem('nakaimap_hidden') || '[]'));
+
 const UI = {
-  ja:{title:"中今 まわりのごはん",subtitle:"冷泉町から歩いて10分の店",
+  ja:{title:"NAKAIMAP",subtitle:"冷泉町から歩いて10分の店",
       lede:"食べたいものを選んでください。全部、宿から歩いて行ける店です。",
-      cats:{all:"すべて",ramen:"ラーメン",udon:"うどん",teishoku:"定食・ごはん",gyoza:"餃子",nabe:"鍋",izakaya:"焼き鳥・居酒屋",veg:"ベジタリアン"},
+      cats:{all:"すべて",ramen:"ラーメン",udon:"うどん",soba:"そば",sushi:"寿司",curry:"カレー",teishoku:"定食・ごはん",gyoza:"餃子",nabe:"鍋",izakaya:"焼き鳥・居酒屋",kissa:"喫茶・甘味",veg:"ベジタリアン"},
       tog:{alcohol:"お酒が飲める",nomeat:"牛・豚なしでいける"},
       count:n=>`${n}軒`,walk:n=>`中今から徒歩${n}分`,reviews:"件",map:"地図をひらく",home:"宿にもどる",
       empty:"条件に合う店がありません。ひとつ条件を外してみてください。",
       foot:"評価はGoogleマップより。時間・定休日は変わることがあります。",
       vegTitle:"ベジタリアン・ヴィーガンの方へ",
       vegBody:"このあたりの店は、うどんやラーメンの汁にかつお節や豚骨を使っています。下の店は肉・魚を使わない専門店です。宿からは少し離れるので、地下鉄が便利です。"},
-  en:{title:"What to eat around Nakaima",subtitle:"Within a 10-minute walk of Reisenmachi",
+  en:{title:"NAKAIMAP",subtitle:"Within a 10-minute walk of Reisenmachi",
       lede:"Pick what you feel like eating. Everything here is within walking distance of the guesthouse.",
-      cats:{all:"All",ramen:"Ramen",udon:"Udon",teishoku:"Rice sets",gyoza:"Gyoza",nabe:"Hot pot",izakaya:"Yakitori & izakaya",veg:"Vegetarian"},
+      cats:{all:"All",ramen:"Ramen",udon:"Udon",soba:"Soba",sushi:"Sushi",curry:"Curry",teishoku:"Rice sets",gyoza:"Gyoza",nabe:"Hot pot",izakaya:"Yakitori & izakaya",kissa:"Cafes & sweets",veg:"Vegetarian"},
       tog:{alcohol:"Drinks served",nomeat:"No beef or pork"},
       count:n=>`${n} places`,walk:n=>`${n} min from Nakaima`,reviews:"reviews",map:"Open in Maps",home:"Back to the guesthouse",
       empty:"Nothing matches. Try removing one filter.",
       foot:"Ratings from Google Maps. Hours and closing days change.",
       vegTitle:"For vegetarians and vegans",
       vegBody:"Most noodle broths here contain bonito fish or pork, even without visible meat. The places below cook without meat or fish. They sit outside the 10-minute walk, so the subway is easiest."},
-  ko:{title:"나카이마 주변 밥집",subtitle:"레이센마치에서 도보 10분 이내",
+  ko:{title:"NAKAIMAP",subtitle:"레이센마치에서 도보 10분 이내",
       lede:"먹고 싶은 것을 골라 주세요. 모두 숙소에서 걸어갈 수 있는 가게입니다.",
-      cats:{all:"전체",ramen:"라멘",udon:"우동",teishoku:"정식·밥",gyoza:"교자",nabe:"나베",izakaya:"야키토리·이자카야",veg:"베지테리언"},
+      cats:{all:"전체",ramen:"라멘",udon:"우동",soba:"소바",sushi:"스시",curry:"카레",teishoku:"정식·밥",gyoza:"교자",nabe:"나베",izakaya:"야키토리·이자카야",kissa:"찻집·디저트",veg:"베지테리언"},
       tog:{alcohol:"술 마실 수 있음",nomeat:"소·돼지 없이 가능"},
       count:n=>`${n}곳`,walk:n=>`나카이마에서 도보 ${n}분`,reviews:"개",map:"지도 열기",home:"숙소로 돌아가기",
       empty:"조건에 맞는 가게가 없습니다. 조건을 하나 빼 보세요.",
       foot:"평점은 구글 지도 기준. 영업시간과 휴무일은 바뀔 수 있습니다.",
       vegTitle:"베지테리언·비건 분들께",
       vegBody:"이 동네의 국물에는 가쓰오부시나 돈코츠가 들어갑니다. 아래 가게는 고기와 생선을 쓰지 않습니다. 숙소에서 조금 머니 지하철이 편합니다."},
-  zh:{title:"中今周边吃什么",subtitle:"冷泉町步行10分钟以内的店",
+  zh:{title:"NAKAIMAP",subtitle:"冷泉町步行10分钟以内的店",
       lede:"选一个今天想吃的。以下都在旅舍步行可达范围内。",
-      cats:{all:"全部",ramen:"拉面",udon:"乌冬",teishoku:"定食·米饭",gyoza:"饺子",nabe:"火锅",izakaya:"烤鸡串·居酒屋",veg:"素食"},
+      cats:{all:"全部",ramen:"拉面",udon:"乌冬",soba:"荞麦面",sushi:"寿司",curry:"咖喱",teishoku:"定食·米饭",gyoza:"饺子",nabe:"火锅",izakaya:"烤鸡串·居酒屋",kissa:"咖啡·甜品",veg:"素食"},
       tog:{alcohol:"可以喝酒",nomeat:"不含牛肉猪肉"},
       count:n=>`${n}家`,walk:n=>`从中今步行${n}分钟`,reviews:"条",map:"打开地图",home:"回到旅舍",
       empty:"没有符合的店。请去掉一个条件。",
@@ -296,7 +332,67 @@ const SHOPS = [
   {id:"sonusonu",cat:"veg",name:"Sonu Sonu",romaji:"Tenjin",pid:"ChIJj2P72OiRQTURcXKsjlCG6R0",walk:25,rating:4.3,reviews:360,yen:2,alcohol:true,nomeat:true,tags:["vegan","english"],
    d:{ja:"天神のヴィーガンカフェ。バーガーやタコライス、朝食も。ウェブから注文する方式です。",en:"Vegan cafe in Tenjin. Burgers, taco rice, breakfast. You order from a web page at the table.",ko:"텐진의 비건 카페. 버거, 타코라이스, 아침식사까지. 테이블에서 웹으로 주문합니다.",zh:"天神的纯素咖啡馆。汉堡、塔可饭与早餐皆有，在座位上用网页点单。"}},
   {id:"evah",cat:"veg",name:"Evah Dining 博多デイトス",romaji:"Hakata Station",pid:"ChIJSeHzhsiRQTURtqCWsb8yPJQ",walk:15,rating:4.4,reviews:174,yen:1,alcohol:false,nomeat:true,tags:["vegan","takeout"],
-   d:{ja:"博多駅の中にあるヴィーガン弁当の店。持ち帰って宿のキッチンで食べられます。",en:"Vegan bento counter inside Hakata Station. Take it back and eat in the guesthouse kitchen.",ko:"하카타역 안의 비건 도시락 가게. 포장해서 숙소 주방에서 먹을 수 있습니다.",zh:"博多站内的纯素便当店。可外带回旅舍厨房享用。"}}
+   d:{ja:"博多駅の中にあるヴィーガン弁当の店。持ち帰って宿のキッチンで食べられます。",en:"Vegan bento counter inside Hakata Station. Take it back and eat in the guesthouse kitchen.",ko:"하카타역 안의 비건 도시락 가게. 포장해서 숙소 주방에서 먹을 수 있습니다.",zh:"博多站内的纯素便当店。可外带回旅舍厨房享用。"}},
+
+  /* ── 2026年8月 追加分 ── */
+  {id:"murata",cat:"soba",name:"むらた",romaji:"Murata",pid:"ChIJUeCMFcCRQTUR6cJMmA5JD5I",walk:1,rating:4.3,reviews:1567,yen:2,alcohol:false,nomeat:true,tags:["reserve"],
+   d:{ja:"宿から徒歩1分。手打ちそばと天ぷらの人気店で、昼はよく並びます。田舎そばへの変更がおすすめ。",en:"One minute from the guesthouse. Popular hand-cut soba and tempura; expect a short lunch queue. Try upgrading to the rustic inaka soba.",ko:"숙소에서 도보 1분. 손으로 뽑은 소바와 튀김이 인기라 점심에는 줄을 서기도 합니다. 시골풍 소바로 바꿔보는 것을 추천.",zh:"距旅舍步行1分钟。手打荞麦面配天妇罗很受欢迎，午市常有排队。推荐换成田舍荞麦面。"}},
+  {id:"tokunagaya",cat:"nabe",name:"博多もつ鍋 とくながや総本店",romaji:"Tokunagaya",pid:"ChIJ4cQEvSaRQTUR1FTJ2zwGnGw",walk:1,rating:4.2,reviews:460,yen:2,alcohol:true,nomeat:false,tags:["reserve"],
+   d:{ja:"宿から徒歩1分のもつ鍋店。名物の手羽先も一緒にどうぞ。予約しておくと安心です。",en:"A motsunabe restaurant one minute from the guesthouse. Pair it with their famous chicken wings. Reservations recommended.",ko:"숙소에서 도보 1분의 모츠나베 가게. 명물 닭날개도 함께. 예약을 추천합니다.",zh:"距旅舍步行1分钟的牛肠锅店，招牌鸡翅也很受欢迎。建议提前预约。"}},
+  {id:"yukimasa",cat:"sushi",name:"鮨 ゆき正",romaji:"Sushi Yukimasa",pid:"ChIJQXSwpuqRQTURgIOqlKltYAk",walk:1,rating:4.2,reviews:46,yen:3,alcohol:true,nomeat:true,tags:["reserve","english"],
+   d:{ja:"櫛田神社の参道すぐ、宿から徒歩1分の寿司店。気さくな大将のカウンターで、コースもおまかせも楽しめます。",en:"One minute away, right by the approach to Kushida Shrine. A friendly counter chef, with course or à la carte options.",ko:"구시다 신사 참배로 바로 옆, 숙소에서 도보 1분인 스시집. 친근한 셰프의 카운터에서 코스도 오마카세도 즐길 수 있습니다.",zh:"就在櫛田神社参道旁，距旅舍步行1分钟的寿司店。厨师亲切健谈，套餐与主厨精选皆可选。"}},
+  {id:"kiya_shokudo",cat:"udon",name:"木屋",romaji:"Kiya Shokudo",pid:"ChIJb5VXR8CRQTUR6hDxCoi4GHg",walk:1,rating:4.0,reviews:151,yen:1,alcohol:true,nomeat:true,tags:["english"],
+   d:{ja:"宿のすぐそば。地元客に混じって食べられる食堂で、写真つきメニューがあり観光客にも親切です。",en:"Right by the guesthouse. A neighbourhood diner popular with locals, with a photo menu that makes it easy for visitors.",ko:"숙소 바로 옆. 현지인들이 즐겨 찾는 식당으로, 사진 메뉴가 있어 여행자에게도 친절합니다.",zh:"就在旅舍旁。深受本地人喜爱的食堂，附有图片菜单，游客也能轻松点餐。"}},
+  {id:"hoteiya_reisen",cat:"izakaya",name:"博多ほてい屋 冷泉町店",romaji:"Hoteiya Reisen",pid:"ChIJ22B_L8CRQTURbHErrY6DHjI",walk:1,rating:3.8,reviews:68,yen:2,alcohol:true,nomeat:true,tags:["late"],
+   d:{ja:"宿から徒歩1分。くじら料理が名物の居酒屋で、刺身や鍋も楽しめます。",en:"One minute from the guesthouse. An izakaya famous for whale dishes, plus sashimi and hot pot.",ko:"숙소에서 도보 1분. 고래 요리가 명물인 이자카야로 사시미와 나베도 즐길 수 있습니다.",zh:"距旅舍步行1分钟。以鲸鱼料理闻名的居酒屋，也可品尝生鱼片与火锅。"}},
+  {id:"number_one",cat:"ramen",name:"長浜ナンバーワン 祇園店",romaji:"Nagahama Number One",pid:"ChIJUYyyYMCRQTURUHz8MfQQMPc",walk:3,rating:4.1,reviews:1789,yen:1,alcohol:false,nomeat:false,tags:["late"],
+   d:{ja:"濃いめの長浜とんこつ。かため麺・やわらか替え玉が地元流。餃子のワンタンも人気です。",en:"Rich Nagahama-style tonkotsu. Order firm noodles, then a soft refill, local style. The wonton gyoza are a hit too.",ko:"진한 나가하마식 돈코츠. 면은 단단하게, 리필은 부드럽게가 현지 스타일. 완탕 교자도 인기.",zh:"浓郁的长浜风豚骨。面点硬、加面点软是当地吃法。云吞饺子也很受欢迎。"}},
+  {id:"yoshinoya_gion",cat:"teishoku",name:"吉野家 祇園店",romaji:"Yoshinoya Gion",pid:"ChIJWVBn-r-RQTUROIjIGoS7xxE",walk:4,rating:3.7,reviews:642,yen:1,alcohol:false,nomeat:false,tags:["late","cheap"],
+   d:{ja:"24時間営業の牛丼チェーン。深夜や早朝、さっと食べたいときに便利です。",en:"A 24-hour beef-bowl chain. Handy for a quick meal late at night or early morning.",ko:"24시간 영업하는 규동 체인. 심야나 이른 아침에 간단히 먹기 좋습니다.",zh:"24小时营业的牛肉盖饭连锁店。深夜或清晨想快速解决一餐时很方便。"}},
+  {id:"hakataya",cat:"ramen",name:"はかたや 川端店",romaji:"Hakataya",pid:"ChIJ9csMLJWRQTURGEsG1G1ho1g",walk:4,rating:4.1,reviews:2360,yen:1,alcohol:false,nomeat:false,tags:["late","cheap"],
+   d:{ja:"290円からのとんこつラーメン。券売機で購入し、24時間開いています。鶏天セットも名物。",en:"Tonkotsu ramen from ¥290. Buy a ticket at the machine; open 24 hours. The chicken tempura set is a local favourite.",ko:"290엔부터의 돈코츠 라멘. 자판기에서 식권 구매, 24시간 영업. 닭튀김 세트도 명물.",zh:"290日元起的豚骨拉面，购票机点单，24小时营业。鸡天妇罗套餐也是招牌。"}},
+  {id:"west_kawabata",cat:"udon",name:"ウエスト 川端店",romaji:"West Kawabata",pid:"ChIJrztxLpWRQTUR-xXkWLehhqQ",walk:4,rating:3.9,reviews:701,yen:1,alcohol:false,nomeat:true,tags:["cheap"],
+   d:{ja:"福岡ではおなじみのうどんチェーン。天ぷらと丼のセットが人気で、22時まで営業しています。",en:"A familiar Fukuoka udon chain. The tempura-and-rice-bowl set is popular; open until 10pm.",ko:"후쿠오카에서 익숙한 우동 체인. 튀김과 덮밥 세트가 인기이며 밤 10시까지 영업합니다.",zh:"福冈常见的乌冬连锁店。天妇罗加饭套餐很受欢迎，营业至晚上10点。"}},
+  {id:"brewer_bandiro",cat:"kissa",name:"Brewer's Coffee ばんぢろ",romaji:"Brewer's Coffee Bandiro",pid:"ChIJ2bT3OZWRQTURs3_-sBO9_bM",walk:4,rating:4.3,reviews:289,yen:2,alcohol:false,nomeat:true,tags:["english"],
+   d:{ja:"商店街の2階にある隠れ家カフェ。豆から選べるドリップコーヒーとデザートが評判です。",en:"A hideaway cafe on the second floor of the arcade. Choose your drip coffee beans; the desserts get great reviews.",ko:"상점가 2층에 숨어 있는 카페. 원두를 골라 마시는 드립 커피와 디저트가 평판이 좋습니다.",zh:"藏在商店街2楼的咖啡馆。可挑选咖啡豆的手冲咖啡与甜点评价很高。"}},
+  {id:"mochikichi",cat:"kissa",name:"もち吉 博多本店",romaji:"Mochikichi Hakata",pid:"ChIJ8fPLEMGRQTURG0PqygcBHiI",walk:5,rating:4.4,reviews:545,yen:1,alcohol:false,nomeat:true,tags:["takeout"],
+   d:{ja:"せんべいと餅菓子の専門店。抹茶ソフトやきなこアイスなど、食べ歩きできるおやつもあります。",en:"A rice cracker and mochi confectionery shop. Also sells matcha and kinako soft-serve for eating on the go.",ko:"쌀과자와 떡과자 전문점. 말차 소프트아이스크림 등 걸으며 먹을 수 있는 간식도 있습니다.",zh:"仙贝与麻糬点心专卖店。也有抹茶、黄豆粉软冰淇淋等适合边走边吃的小吃。"}},
+  {id:"brasileiro",cat:"kissa",name:"ブラジレイロ",romaji:"Cafe Brasileiro",pid:"ChIJAQDFbeqRQTURga2rdc6C2Fo",walk:5,rating:4.3,reviews:676,yen:1,alcohol:false,nomeat:false,tags:[],
+   d:{ja:"1934年創業、福岡最古の喫茶店のひとつ。ハンバーグセットやオムライスが人気です。",en:"Opened in 1934, one of Fukuoka's oldest kissaten cafes. The hamburger steak set and omurice are favourites.",ko:"1934년 창업, 후쿠오카에서 가장 오래된 킷사텐 중 하나. 함박스테이크 세트와 오므라이스가 인기.",zh:"1934年创立，福冈最古老的喫茶店之一。汉堡排套餐与蛋包饭很受欢迎。"}},
+  {id:"oyama",cat:"nabe",name:"おおやま",romaji:"Oyama",pid:"ChIJaRMgauqRQTURiZ3Aw7HH6pc",walk:6,rating:4.5,reviews:2935,yen:2,alcohol:true,nomeat:false,tags:["reserve"],
+   d:{ja:"座敷の店内でいただくもつ鍋。馬刺しも人気で、外国人観光客にも人気の高い店です。",en:"Motsunabe served in a tatami-floor dining room. The horse sashimi is popular too; a favourite with visitors from abroad.",ko:"다다미 좌석에서 즐기는 모츠나베. 말고기 육회도 인기이며 외국인 관광객에게도 인기 있는 가게입니다.",zh:"在榻榻米座位享用的牛肠锅。马肉刺身也很受欢迎，是外国游客喜爱的人气店。"}},
+  {id:"iroha",cat:"nabe",name:"いろは",romaji:"Iroha",pid:"ChIJZ-f3HuuRQTURH8oy_JI2tZ8",walk:6,rating:4.3,reviews:1086,yen:2,alcohol:true,nomeat:true,tags:["reserve"],
+   d:{ja:"1993年創業の水炊き専門店。締めは卵とじの雑炊で。座敷席が中心です。",en:"A mizutaki (chicken hot pot) specialist since 1993. Finish with the egg rice porridge. Mostly tatami seating.",ko:"1993년 창업한 미즈타키 전문점. 마무리는 계란 죽으로. 다다미 좌석 위주입니다.",zh:"1993年创立的水炊鸡肉锅专门店。收尾推荐蛋花粥。以榻榻米座位为主。"}},
+  {id:"suzukake",cat:"kissa",name:"鈴懸 本店",romaji:"Suzukake Honten",pid:"ChIJ6zU6eMiRQTUR7EQ8viREEcc",walk:7,rating:4.4,reviews:1225,yen:2,alcohol:false,nomeat:true,tags:["takeout"],
+   d:{ja:"和菓子と喫茶を楽しめる老舗。とらやき最中や季節のぜんざいが名物です。",en:"A long-established shop for wagashi sweets and a sit-down tea room. Known for monaka wafers and seasonal zenzai.",ko:"화과자와 찻집을 함께 즐길 수 있는 노포. 도라야키 모나카와 계절 젠자이가 명물입니다.",zh:"可品尝和果子与茶点的老铺。最中饼与时令红豆汤是招牌。"}},
+  {id:"berkeley",cat:"curry",name:"バークレー",romaji:"Berkeley",pid:"ChIJaw5rsZSRQTURDD9fqo41lzA",walk:7,rating:4.3,reviews:866,yen:2,alcohol:false,nomeat:false,tags:["lunch"],
+   d:{ja:"ハンバーグカレーが評判の洋食店。売り切れ次第閉店なので、早めの来店がおすすめです。",en:"A Western-style diner known for hamburger steak curry. They close once sold out, so come early.",ko:"함박스테이크 카레로 유명한 양식점. 매진되면 조기 마감하니 일찍 방문하는 것을 추천.",zh:"以汉堡排咖喱闻名的洋食店。卖完即打烊，建议早点前往。"}},
+  {id:"sushizanmai",cat:"sushi",name:"すしざんまい 中洲店",romaji:"Sushi Zanmai Nakasu",pid:"ChIJ90juVpSRQTURsIAXPraBQQQ",walk:7,rating:3.7,reviews:665,yen:2,alcohol:true,nomeat:true,tags:["late","english"],
+   d:{ja:"深夜まで営業する寿司チェーン。多言語メニューとQRコード注文があり、旅行者にも入りやすい店です。",en:"A sushi chain open late. Multilingual menu and QR-code ordering make it easy for visitors.",ko:"심야까지 영업하는 스시 체인. 다국어 메뉴와 QR코드 주문이 있어 여행자도 편하게 이용할 수 있습니다.",zh:"营业到深夜的寿司连锁店。有多语言菜单和二维码点餐，游客也容易点单。"}},
+  {id:"choco_shop",cat:"kissa",name:"チョコレートショップ 博多本店",romaji:"Chocolate Shop Hakata",pid:"ChIJ_SeJseuRQTURI5CEMV3cnnc",walk:8,rating:4.3,reviews:1116,yen:1,alcohol:false,nomeat:true,tags:["takeout"],
+   d:{ja:"福岡の老舗洋菓子店。濃厚なチョコレートケーキが評判で、手土産にもおすすめです。",en:"A long-standing Fukuoka confectionery. The rich chocolate cake is a favourite, good for a gift too.",ko:"후쿠오카의 오래된 양과자점. 진한 초콜릿 케이크가 평판이 좋고 선물로도 추천합니다.",zh:"福冈的老牌西点店。浓郁的巧克力蛋糕评价很高，也适合作伴手礼。"}},
+  {id:"kabeya",cat:"soba",name:"加辺屋（かべや）",romaji:"Kabeya",pid:"ChIJ3X4Ta-uRQTURdyDyUuiFZw0",walk:8,rating:4.3,reviews:371,yen:2,alcohol:false,nomeat:true,tags:["lunch"],
+   d:{ja:"大きな海老天がのったそばが名物。11時から15時までの昼営業のみです。",en:"Known for soba topped with a large shrimp tempura. Lunch hours only, 11am to 3pm.",ko:"큼직한 새우튀김이 올라간 소바가 명물. 11시부터 15시까지 점심 영업만 합니다.",zh:"以配大只虾天妇罗的荞麦面闻名，仅午市营业（11点至15点）。"}},
+  {id:"shinda",cat:"udon",name:"博多綱場うどん しん田",romaji:"Hakata Tsunaba Udon Shinda",pid:"ChIJ49aEC-uRQTURWFHJniym_aA",walk:8,rating:4.1,reviews:181,yen:1,alcohol:false,nomeat:true,tags:["lunch"],
+   d:{ja:"やさしい出汁のうどん店。天丼とのセットが人気で、ベジタリアン対応のスープもあります。",en:"An udon shop with a gentle broth. The tempura-rice-bowl set is popular, and a vegetarian broth is available.",ko:"부드러운 육수의 우동집. 튀김덮밥 세트가 인기이며 채식 대응 국물도 있습니다.",zh:"汤头温和的乌冬店。天丼套餐很受欢迎，也提供素食汤底。"}},
+  {id:"kurasushi",cat:"sushi",name:"くら寿司 博多中洲店",romaji:"Kura Sushi Nakasu",pid:"ChIJdVR5n5SRQTURT8je16UrSRE",walk:8,rating:3.8,reviews:2623,yen:1,alcohol:false,nomeat:true,tags:["cheap","late"],
+   d:{ja:"回転寿司チェーン。価格が手頃で、子ども連れでも入りやすい店です。深夜まで営業。",en:"A conveyor-belt sushi chain. Affordable and easy with kids; open late.",ko:"회전초밥 체인. 가격이 합리적이고 아이와 함께도 편하게 갈 수 있는 가게. 늦은 시간까지 영업.",zh:"回转寿司连锁店，价格亲民，带小孩也方便。营业至深夜。"}},
+  {id:"miyake_udon",cat:"udon",name:"みやけうどん",romaji:"Miyake Udon",pid:"ChIJNaui_OmRQTURXBA77pYaUpM",walk:8,rating:4.1,reviews:1074,yen:1,alcohol:false,nomeat:true,tags:["cheap","lunch"],
+   d:{ja:"昔ながらの雰囲気が残るうどん店。やわらかい麺と煮干し出汁の優しいスープが特徴です。",en:"An old-fashioned udon shop with soft noodles and a gentle dried-sardine broth.",ko:"옛 정취가 남아있는 우동집. 부드러운 면과 니보시 육수의 순한 국물이 특징입니다.",zh:"保留着怀旧氛围的乌冬店。柔软的面条与温和的小鱼干高汤是特色。"}},
+  {id:"tatsumi_sushi",cat:"sushi",name:"たつみ寿司 総本店",romaji:"Tatsumi Sushi",pid:"ChIJBVIqb-uRQTURKja2K5H_DCE",walk:9,rating:4.2,reviews:989,yen:2,alcohol:true,nomeat:true,tags:["english"],
+   d:{ja:"福岡っ子に長く愛される寿司店。にぎりのおまかせコースがお手頃価格で楽しめます。",en:"A sushi restaurant long loved by locals. The omakase nigiri course is reasonably priced.",ko:"후쿠오카 사람들이 오랫동안 사랑하는 스시집. 니기리 오마카세 코스를 합리적인 가격에 즐길 수 있습니다.",zh:"深受福冈本地人喜爱的寿司店，握寿司主厨精选套餐价格实惠。"}},
+  {id:"motsuko",cat:"nabe",name:"もつ幸",romaji:"Motsuko",pid:"ChIJYdO7LOqRQTURbU3vE9_XYfE",walk:9,rating:4.2,reviews:1108,yen:2,alcohol:true,nomeat:false,tags:["reserve"],
+   d:{ja:"あっさりめのもつ鍋が評判の店。締めのちゃんぽん麺は追加注文が必要です。",en:"Known for a lighter-style motsunabe broth. The finishing champon noodles need to be ordered separately.",ko:"산뜻한 모츠나베로 평판이 좋은 가게. 마무리 짬뽕면은 별도 주문이 필요합니다.",zh:"以清爽口味的牛肠锅著称。收尾的什锦面需要另外点单。"}},
+  {id:"nobuhide",cat:"izakaya",name:"信秀本店",romaji:"Nobuhide Honten",pid:"ChIJWUhcb-uRQTURKdF8cAPQ_EA",walk:9,rating:4.0,reviews:753,yen:2,alcohol:true,nomeat:true,tags:["late"],
+   d:{ja:"手羽先が名物の焼き鳥店。芸能人も訪れる人気店で、賑やかな雰囲気です。",en:"A yakitori restaurant famous for chicken wings. Popular and lively, sometimes visited by celebrities.",ko:"닭날개가 명물인 야키토리 가게. 유명인도 찾는 인기점으로 활기찬 분위기입니다.",zh:"以鸡翅闻名的烤鸡串店。人气很高，气氛热闹，也有名人光顾。"}},
+  {id:"toriden",cat:"nabe",name:"博多水炊き とり田 博多本店",romaji:"Toriden Hakata",pid:"ChIJs0-UX-uRQTURkYi-DvhX3S0",walk:9,rating:4.4,reviews:1869,yen:3,alcohol:true,nomeat:true,tags:["reserve","english"],
+   d:{ja:"濃厚な鶏白湯スープの水炊きが自慢の店。コース仕立てで、外国人観光客にも人気です。",en:"Known for a rich, milky-white chicken hot pot. Served as a course; popular with overseas visitors.",ko:"진한 닭 백탕 국물의 미즈타키가 자랑인 가게. 코스 요리로 제공되며 외국인 관광객에게도 인기.",zh:"以浓郁乳白鸡汤水炊锅为招牌，套餐形式供应，深受海外游客欢迎。"}},
+  {id:"hachibei_bekkan",cat:"izakaya",name:"焼き鳥八兵衛 Bekkan",romaji:"Yakitori Hachibei Bekkan",pid:"ChIJ_88FQb6RQTURZkkNG95JusM",walk:10,rating:4.5,reviews:595,yen:2,alcohol:true,nomeat:true,tags:["reserve","english"],
+   d:{ja:"丁寧に焼かれた串が評判の焼き鳥店。オンライン予約が可能で、コースも選べます。",en:"Yakitori grilled with real care. Online reservations are possible, with set-course options.",ko:"정성스럽게 구운 꼬치로 평판이 좋은 야키토리집. 온라인 예약이 가능하고 코스도 선택할 수 있습니다.",zh:"以精心烤制的串烧闻名的烤鸡串店。可在线预约，也有套餐可选。"}},
+  {id:"ichiran",cat:"ramen",name:"一蘭 本社総本店",romaji:"Ichiran Headquarters",pid:"ChIJSc8jdZORQTURu6BMwxrKbGg",walk:11,rating:4.2,reviews:13014,yen:2,alcohol:false,nomeat:false,tags:["late","english"],
+   d:{ja:"世界的に有名な一蘭の本店。ひとりひとり仕切られた「味集中カウンター」で、24時間営業です。",en:"The world-famous Ichiran's flagship. Individual booth seating for focusing on your bowl; open 24 hours.",ko:"세계적으로 유명한 이치란의 본점. 1인용 부스 좌석에서 즐기는 라멘, 24시간 영업.",zh:"世界知名的一蘭总本店。设有独立隔间的「专注座位」，24小时营业。"}},
+  {id:"udon_taira",cat:"udon",name:"うどん平",romaji:"Udon Taira",pid:"ChIJrzUd7r6RQTURJdG7o6TxEMs",walk:22,rating:4.4,reviews:2720,yen:1,alcohol:false,nomeat:true,tags:["lunch","cheap","subway"],
+   d:{ja:"移転してやや遠くなりましたが、ごぼう天うどんが評判の名店。営業は昼のみ（11:00〜16:00頃）です。地下鉄も便利。",en:"Moved a bit further away, but famous for burdock tempura udon. Lunch only (around 11am–4pm); the subway makes it easy.",ko:"이전으로 다소 멀어졌지만 우엉튀김 우동으로 유명한 가게. 점심에만 영업(약 11시~16시). 지하철이 편리합니다.",zh:"虽然搬迁后稍远，但牛蒡天妇罗乌冬很有名。仅午市营业（约11点至16点），坐地铁较方便。"}}
 ];
 
 /* ─────────────────────────────────────────────
@@ -306,8 +402,9 @@ const SHOPS = [
    ───────────────────────────────────────────── */
 const INK="#16324F", ENJI="#A8382C", CREAM="#FFFDF8", TAKE="#4E7A63", KIN="#D9A441";
 
-const TINT = {ramen:"#F4E7DE",udon:"#F1EFE1",teishoku:"#EEE8DA",gyoza:"#F3E6E0",
-              nabe:"#F0E2DC",izakaya:"#EFE9D9",veg:"#E6EEE7"};
+const TINT = {ramen:"#F4E7DE",udon:"#F1EFE1",soba:"#EDEADF",sushi:"#F0E6DE",curry:"#F2E4D3",
+              teishoku:"#EEE8DA",gyoza:"#F3E6E0",
+              nabe:"#F0E2DC",izakaya:"#EFE9D9",kissa:"#EFE6DC",veg:"#E6EEE7"};
 
 const bowl = (fill) => `
   <ellipse cx="100" cy="60" rx="56" ry="11" fill="${fill}" stroke="${INK}" stroke-width="2.6"/>
@@ -405,8 +502,30 @@ const ILLUS = {
     <circle cx="120" cy="60" r="6" fill="${KIN}" stroke="${INK}" stroke-width="2.2"/>
     <path d="M100 40c0-10 8-16 16-16-1 10-7 15-16 16z" fill="#7FAE7F" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
     <path d="M100 40c-2-8-9-12-15-11 2 8 7 11 15 11z" fill="#9CC49C" stroke="${INK}" stroke-width="2.2" stroke-linejoin="round"/>
+  </svg>`,
+
+  sushi:`<svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="寿司">
+    <ellipse cx="102" cy="74" rx="72" ry="14" fill="#E7DCC6" stroke="${INK}" stroke-width="2.4"/>
+    <g stroke="${INK}" stroke-width="2.2" stroke-linejoin="round">
+      <rect x="46" y="48" width="34" height="20" rx="4" fill="${CREAM}"/>
+      <path d="M46 48c4-9 30-9 34 0" fill="#E8836A"/>
+      <rect x="90" y="45" width="34" height="22" rx="4" fill="${CREAM}"/>
+      <path d="M90 45c4-9 30-9 34 0" fill="#D96A52"/>
+      <rect x="134" y="49" width="30" height="18" rx="4" fill="${CREAM}"/>
+      <rect x="134" y="49" width="30" height="7" fill="#2F4A40"/>
+    </g>
+  </svg>`,
+
+  kissa:`<svg viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="喫茶・甘味">
+    ${steam(96)}${steam(120)}
+    <ellipse cx="106" cy="84" rx="48" ry="8" fill="#D9C9A8" stroke="${INK}" stroke-width="2"/>
+    <path d="M62 50h84l-8 34a10 10 0 0 1-10 8H80a10 10 0 0 1-10-8z" fill="#6E4A34" stroke="${INK}" stroke-width="2.4"/>
+    <path d="M146 58h10a10 10 0 0 1 0 20h-10" fill="none" stroke="${INK}" stroke-width="2.4"/>
+    <ellipse cx="104" cy="50" rx="42" ry="7" fill="#8A6142" stroke="${INK}" stroke-width="2.2"/>
   </svg>`
 };
+ILLUS.soba = ILLUS.udon;
+ILLUS.curry = ILLUS.teishoku;
 
 let lang = "ja", cat = "all", tog = {alcohol:false, nomeat:false};
 
@@ -423,6 +542,7 @@ function renderChips(){
 function renderList(){
   const t = UI[lang];
   const shops = SHOPS.filter(s =>
+    !excluded.has(s.id) &&
     (cat==="all" ? s.cat!=="veg" : s.cat===cat) &&
     (!tog.alcohol || s.alcohol) &&
     (!tog.nomeat || s.nomeat)
@@ -434,12 +554,16 @@ function renderList(){
 
   document.getElementById("list").innerHTML = shops.length ? shops.map(s=>`
     <article class="card${s.cat==="veg"?" veg":""}">
-      ${s.photo
-        ? `<img class="photo" src="${s.photo}" alt="${s.name}" loading="lazy">`
-        : `<div class="illus" style="background-color:${TINT[s.cat]}">${ILLUS[s.cat]}</div>`}
       <div class="card-body">
-        <h2>${s.name}</h2>
-        <p class="romaji">${s.romaji}</p>
+        <div class="card-top">
+          ${s.photo
+            ? `<img class="photo" src="${s.photo}" alt="${s.name}" loading="lazy">`
+            : `<div class="illus" style="background-color:${TINT[s.cat]}">${ILLUS[s.cat]}</div>`}
+          <div class="card-head">
+            <h2>${s.name}</h2>
+            <p class="romaji">${s.romaji}</p>
+          </div>
+        </div>
         <p class="desc">${s.d[lang]}</p>
         <div class="meta">
           <span class="walk">${t.walk(s.walk)}</span>
@@ -460,7 +584,79 @@ function renderAll(){
   document.getElementById("lede").textContent = t.lede;
   document.getElementById("homeLabel").textContent = t.home;
   document.getElementById("foot").textContent = t.foot;
-  renderChips(); renderList();
+  renderChips(); renderList(); renderEditPanel();
+}
+
+function renderEditPanel(){
+  const panel = document.getElementById("editPanel");
+  if(!EDIT){ panel.innerHTML=""; return; }
+
+  const CATLABEL = UI[lang].cats;
+  const grouped = {};
+  SHOPS.forEach(s=>{ (grouped[s.cat] = grouped[s.cat] || []).push(s); });
+
+  panel.innerHTML = `
+    <div class="editBar">
+      <b>編集モード</b>
+      <span>チェックを外すと一覧から非表示になります</span>
+      <button type="button" id="allOnBtn">全部表示</button>
+      <button type="button" id="allOffBtn">全部非表示</button>
+      <button type="button" id="exportBtn" class="expBtn">この内容でHTMLを書き出す ⬇</button>
+      <span id="editCount"></span>
+    </div>
+    <div class="editList">
+      ${Object.entries(grouped).map(([c,list])=>`
+        <div class="editGroup">
+          <div class="editGroupTitle">${CATLABEL[c] || c}（${list.length}）</div>
+          ${list.slice().sort((a,b)=>a.walk-b.walk).map(s=>`
+            <label class="editItem">
+              <input type="checkbox" data-id="${s.id}" ${excluded.has(s.id) ? "" : "checked"}>
+              <span>${s.name}</span>
+              <span class="editWalk">徒歩${s.walk}分</span>
+            </label>`).join("")}
+        </div>`).join("")}
+    </div>`;
+
+  document.getElementById("editCount").textContent = `掲載中 ${SHOPS.length - excluded.size} / ${SHOPS.length}`;
+
+  panel.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+    cb.addEventListener("change", e=>{
+      const id = e.target.dataset.id;
+      if(e.target.checked) excluded.delete(id); else excluded.add(id);
+      localStorage.setItem("nakaimap_hidden", JSON.stringify([...excluded]));
+      renderList(); renderEditPanel();
+    });
+  });
+  document.getElementById("allOnBtn").addEventListener("click", ()=>{
+    excluded.clear();
+    localStorage.setItem("nakaimap_hidden", "[]");
+    renderList(); renderEditPanel();
+  });
+  document.getElementById("allOffBtn").addEventListener("click", ()=>{
+    SHOPS.forEach(s=>excluded.add(s.id));
+    localStorage.setItem("nakaimap_hidden", JSON.stringify([...excluded]));
+    renderList(); renderEditPanel();
+  });
+  document.getElementById("exportBtn").addEventListener("click", exportHTML);
+}
+
+function exportHTML(){
+  const newScriptText = SCRIPT_SRC.split("\n").filter(line=>{
+    const m = line.match(/^\s*\{id:"([^"]+)",/);
+    return !(m && excluded.has(m[1]));
+  }).join("\n");
+
+  const clone = document.documentElement.cloneNode(true);
+  const ep = clone.querySelector("#editPanel"); if(ep) ep.innerHTML = "";
+  const scriptEl = clone.querySelector("script");
+  scriptEl.textContent = newScriptText;
+
+  const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+  const blob = new Blob([html], {type:"text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Nakaimap.html";
+  document.body.appendChild(a); a.click(); a.remove();
 }
 
 document.querySelectorAll(".lang").forEach(b=>b.addEventListener("click",()=>{
